@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
 
 @TeleOp(name = "Driver Control", group = "Linear Opmode")
-public class DriverControl extends Controller {
+public class DriverControl extends BaseOpMode {
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         // Do stuff
-        System.out.println(this.scheduler);
     }
 }
