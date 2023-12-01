@@ -1,12 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.Framework.BaseOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
 @TeleOp(name = "Driver Control", group = "Linear Opmode")
-public class DriverControl extends BaseOpMode {
-    @Override
-    public void runOpMode() {
+class DriverControl : LinearOpMode() {
+    override fun runOpMode() {
         // Do stuff
     }
 }
