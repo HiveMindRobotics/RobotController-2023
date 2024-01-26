@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.Gamepad
 import kotlin.math.*
 
 @TeleOp(name = "abcdefghijklmnopqrstuvwxyzzyxwvutsrqponmlkjihgfedcbaabcdefghijklmnopqrstuvwxyzzyxwvutsrqponmlkjihgfedcbaabcdefghijklmnopqrstuvwxyzzyxwvutsrqponmlkjihgfedcbaabcdefghijklmnopqrstuvwxyzzyxwvutsrqponmlkjihgfedcbaabcdefghijklmnopqrstuvwxyzzyxwvutsrqponmlkjihgfedcbaabcdefghijklmnopqrstuvwxyzzyxwvutsrqponmlkjihgfedcbaabcdefghijklmnopqrstuvwxyzzyxwvutsrqponmlkjihgfedcbaabcdefghijklmnopqrstuvwxyzzyxwvutsrqponmlkjihgfedcba", group = "Linear Opmode")
@@ -22,6 +23,10 @@ class DriverControl : LinearOpMode() {
         val armRight = hardwareMap.get(DcMotor::class.java, "rightBottomArm")
         val armMiddle = hardwareMap.get(DcMotor::class.java, "middleArm")
         val armWrist = hardwareMap.get(DcMotor::class.java, "wristArm")
+
+        val prevGamepad1 = Gamepad()
+        val prevGamepad2 = Gamepad()
+
         waitForStart()
 
         armLeft.targetPosition = armLeft.currentPosition
@@ -46,8 +51,10 @@ class DriverControl : LinearOpMode() {
         var b = false
         var c = false
         var d = true
-        var e = 1;
-        var f = 1;
+        var e = 1
+        var f = 1
+        var g = false
+        var h = false
         
         while (opModeIsActive()) {
             val z_translation = gamepad1.left_trigger - gamepad1.right_trigger
@@ -94,41 +101,93 @@ class DriverControl : LinearOpMode() {
             // val middlearmPower = gamepad2.right_stick_y.toDouble()
             // val wristPower = gamepad2.right_trigger.toDouble() - gamepad2.left_trigger.toDouble()
 
-        
-
-            if (gamepad2.left_stick_y != 0.0f) {
-                armLeft.targetPosition = armLeft.currentPosition + (gamepad2.left_stick_y * mul).toInt()
-                armRight.targetPosition = armRight.currentPosition - (gamepad2.left_stick_y * mul).toInt()
-                a = true
+            if (gamepad2.b) {
+                armLeft.targetPosition = -315
+                armRight.targetPosition = 315
+                armMiddle.targetPosition = -660
+                armWrist.targetPosition = -91
+                h = true
             }
-            else if (a) {
+            if (gamepad2.a) {
+                g = !g
                 armLeft.targetPosition = armLeft.currentPosition
                 armRight.targetPosition = armRight.currentPosition
-                a = false
-            }
-            
-            if (gamepad2.right_stick_y != 0.0f) {
-                armMiddle.targetPosition = armMiddle.currentPosition + (gamepad2.right_stick_y * mul).toInt()
-                b = true
-            }
-            else if (b) {
                 armMiddle.targetPosition = armMiddle.currentPosition
-                b = false
-            }
-            
-            if (gamepad2.left_trigger != 0.0f || gamepad2.right_trigger != 0.0f) {
-                armWrist.targetPosition = armWrist.currentPosition + ((gamepad2.right_trigger - gamepad2.left_trigger) * mul/2).toInt()
-                c = true
-            }
-            else if (c) {
                 armWrist.targetPosition = armWrist.currentPosition
-                c = false
+                
+                armLeft.mode = DcMotor.RunMode.RUN_TO_POSITION
+                armRight.mode = DcMotor.RunMode.RUN_TO_POSITION
+                armMiddle.mode = DcMotor.RunMode.RUN_TO_POSITION
+                armWrist.mode = DcMotor.RunMode.RUN_TO_POSITION
+                
+                armLeft.power = p.toDouble()
+                armRight.power = p.toDouble()
+                armMiddle.power = p.toDouble()
+                armWrist.power = 10.toDouble()
             }
-            
+            if (g) {
+                armLeft.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+                armRight.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+                armMiddle.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+                armWrist.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+                armLeft.power = 0.toDouble()
+                armRight.power = 0.toDouble()
+                armMiddle.power = 0.toDouble()
+                armWrist.power = 0.toDouble()
+            }
+            else {
+                if (h) {
+                    if (abs(armLeft.targetPosition - armLeft.currentPosition) < 5 &&
+                            abs(armRight.targetPosition - armRight.currentPosition) < 5 &&
+                            abs(armMiddle.targetPosition - armMiddle.currentPosition) < 5 &&
+                            abs(armWrist.targetPosition - armWrist.currentPosition) < 5) {
+                        h = false
+                    }
+                }
+                else {
+                    if (gamepad2.left_stick_y != 0.0f) {
+                        armLeft.targetPosition = armLeft.currentPosition + (gamepad2.left_stick_y * mul).toInt()
+                        armRight.targetPosition = armRight.currentPosition - (gamepad2.left_stick_y * mul).toInt()
+                        a = true
+                    }
+                    else if (a) {
+                        armLeft.targetPosition = armLeft.currentPosition
+                        armRight.targetPosition = armRight.currentPosition
+                        a = false
+                    }
+                    
+                    if (gamepad2.right_stick_y != 0.0f) {
+                        armMiddle.targetPosition = armMiddle.currentPosition + (gamepad2.right_stick_y * mul).toInt()
+                        b = true
+                    }
+                    else if (b) {
+                        armMiddle.targetPosition = armMiddle.currentPosition
+                        b = false
+                    }
+                    
+                    if (gamepad2.left_trigger != 0.0f || gamepad2.right_trigger != 0.0f) {
+                        armWrist.targetPosition = armWrist.currentPosition + ((gamepad2.right_trigger - gamepad2.left_trigger) * mul/2).toInt()
+                        c = true
+                    }
+                    else if (c) {
+                        armWrist.targetPosition = armWrist.currentPosition
+                        c = false
+                    }
+                }
+            }
+
+            telemetry.addLine("armLeft.currentPosition ${armLeft.currentPosition}")
+            telemetry.addLine("armRight.currentPosition ${armRight.currentPosition}")
+            telemetry.addLine("armMiddle.currentPosition ${armMiddle.currentPosition}")
+            telemetry.addLine("armWrist.currentPosition ${armWrist.currentPosition}")
+            telemetry.update()
+
+            prevGamepad1.copy(gamepad1)
+            prevGamepad2.copy(gamepad2)
             // leftBottomarm.power = smooth(leftBottomarmPower.toFloat())
             // rightBottomarm.power = smooth(rightBottomarmPower.toFloat())
             // middlearm.power = smooth(middlearmPower.toFloat())
-            // wristarm.power = smooth(wristPower.toFloat())
+            // wristarm.power = smooth(wristPower.toFloat() -315, 315, -660, -91
         }
     }
 }
