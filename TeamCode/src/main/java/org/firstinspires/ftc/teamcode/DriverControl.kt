@@ -22,9 +22,9 @@ class DriverControl : LinearOpMode() {
         val armRight = hardwareMap.get(DcMotor::class.java, "rightBottomArm")
         val armMiddle = hardwareMap.get(DcMotor::class.java, "middleArm")
         val armWrist = hardwareMap.get(DcMotor::class.java, "wristArm")
-        val slide1 = hardwareMap.get(DcMotor::class.java, "slide1")
-        val slide2 = hardwareMap.get(DcMotor::class.java, "slide2")
+        val slide = hardwareMap.get(DcMotor::class.java, "slide")
         val armServo = hardwareMap.get(Servo::class.java, "servo0")
+        val planeServo = hardwareMap.get(Servo::class.java, "servo1")
         
         val prevGamepad1 = Gamepad()
         val prevGamepad2 = Gamepad()
@@ -192,10 +192,14 @@ class DriverControl : LinearOpMode() {
                     }
                 }
                 if (gamepad2.dpad_down) {
-                    armServo.position = 0.35
+                    armServo.position = 1.0
                 }
                 if (gamepad2.dpad_up) {
                     armServo.position = 0.0
+                }
+
+                if (gamepad2.dpad_left) {
+                    planeServo.position = 1.0
                 }
                 
                 var g2lb = 0.0
@@ -204,10 +208,11 @@ class DriverControl : LinearOpMode() {
                 if (gamepad2.right_bumper) g2rb = 10.0
                 
                 var slide_power = g2lb - g2rb
-                slide1.power = slide_power
-                slide2.power = -slide_power
+                slide.power = slide_power
             }
 
+            telemetry.addLine("slide.currentPosition ${slide.currentPosition}")
+            
             telemetry.addLine("armLeft.currentPosition ${armLeft.currentPosition}")
             telemetry.addLine("armRight.currentPosition ${armRight.currentPosition}")
             telemetry.addLine("armMiddle.currentPosition ${armMiddle.currentPosition}")
