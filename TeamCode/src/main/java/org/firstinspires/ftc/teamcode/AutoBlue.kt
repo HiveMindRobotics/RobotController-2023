@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.*
 
 
 @Autonomous(name = "AutoBlue", group = "Linear Opmode")
@@ -14,8 +14,9 @@ class AutoBlue : LinearOpMode() {
         val armRight = hardwareMap.get(DcMotor::class.java, "rightBottomArm")
         val armMiddle = hardwareMap.get(DcMotor::class.java, "middleArm")
         val armWrist = hardwareMap.get(DcMotor::class.java, "wristArm")
-        val slide1 = hardwareMap.get(DcMotor::class.java, "slide1")
-        val slide2 = hardwareMap.get(DcMotor::class.java, "slide2")
+        val slide = hardwareMap.get(DcMotor::class.java, "slide")
+        val armServo = hardwareMap.get(Servo::class.java, "servo0")
+        val planeServo = hardwareMap.get(Servo::class.java, "servo1")
 
         waitForStart()
         leftMotor.power = 10.0
