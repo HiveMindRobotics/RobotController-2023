@@ -30,18 +30,18 @@ class DriverControll : LinearOpMode() {
         
         waitForStart()
 
-        var speed_modifier = 1.0
-        var sprint = 0.5
-        
         while (opModeIsActive()) {
+            var speed_modifier = 1.0
+            var sprint = 0.5
+            
             val drive = gamepad1.left_stick_y.toDouble()
             val strafe = -gamepad1.left_stick_x.toDouble()
             val twist = -gamepad1.right_stick_x.toDouble()
 
             if (gamepad1.b && !gamepad1.x) 
-                speed_modifier *= .5
+                speed_modifier = .5
             if (gamepad1.x && !gamepad1.b)
-                speed_modifier *= 2
+                speed_modifier = 2
 
             wheelLeftFront.power  = (drive + strafe + twist) * speed_modifier
             wheelRightFront.power = (drive - strafe - twist) * speed_modifier
@@ -51,8 +51,6 @@ class DriverControll : LinearOpMode() {
 
             if(gamepad2.a)
                 sprint = 1.0
-            else
-                sprint = 0.5
             
             if (gamepad2.left_trigger > 0.1 || gamepad2.right_trigger > 0.1) {
                 hslideLeft.power  = -smooth(gamepad2.left_trigger - gamepad2.right_trigger) * sprint
